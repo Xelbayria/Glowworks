@@ -1,0 +1,17 @@
+name: Question
+description: Ask your question
+title: "[❔]: "
+labels: "question"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        QUESTION
+
+  - type: textarea
+    id: details
+    attributes:
+      label: "Additional Details"
+      description: "Add more explanation related to your question."
+    validations:
+      required: false

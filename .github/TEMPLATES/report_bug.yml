@@ -1,0 +1,74 @@
+name: Report Bug
+description: Every Compat got a bug? Report it.
+title: "[🐞]: "
+labels: "bug"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        BUG
+
+  - type: checkboxes
+    id: code-of-conduct
+    attributes:
+      label: "Code of Conduct"
+      options:
+        - label: "Always check you are using the latest version of the mods and its dependencies"
+          required: true
+        - label: "Remove mod that enhances Minecraft: Optifine, Sodium, others. The issue still persists."
+          required: true
+        - label: "If you are unsure which mod is the culprit.\nDisable all of your mods and enable them 1-2 mods each time to isolate the culprit"
+          required: true
+        - label: "Confirm that there is no existing issue with a similar description submitted in the list of issues."
+          required: true
+
+  - type: dropdown
+    id: version-loader
+    attributes:
+      label: "Version - Loader (DO NOT FORGET TO SELECT THE CORRECT VERSION)"
+      description: "What's the Minecraft version & loader"
+      options:
+        - DO NOT FORGET the selected one is correct
+        - 1.21.1 - NEOFORGE
+        - 1.20.1 - FORGE
+      default: 0
+    validations:
+      required: true
+
+  - type: input
+    id: glowworks
+    attributes:
+      label: Glowwork Version
+      description: The current version of Glowwork
+      placeholder: ex. glowworks-1.20.1-1.0.0-forge
+    validations:
+      required: true
+
+  - type: input
+    id: moonlight
+    attributes:
+      label: Moonlight Lib Version
+      description: The current version of Moonlight Lib
+      placeholder: ex. moonlight-1.20-2.8.46-forge
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue-details
+    attributes:
+      label: "Issue Detail"
+      description: |
+        A clear and concise description of what the bug is.
+        If your Minecraft crashes, it creates a crash-report file in ~/.minecraft/crash-report/ - IT IS NEEDED
+        The latest.log is found in ~/.minecraft/log/
+      placeholder: "ATTENTION: DO NOT put log files here. Use https://mclo.gs/ or https://gnomebot.dev/ to paste the content into and share the link in here."
+    validations:
+        required: true
+
+  - type: textarea
+    attributes:
+      label: "OPTIONAL: Images"
+      description: Adding images to help with the report
+      value: "<details>\n\n<summary>Images</summary>\n\nInsert your images here\n</details>"
+    validations:
+      required: false
