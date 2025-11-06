@@ -1,0 +1,113 @@
+plugins {
+    id 'dev.architectury.loom' version '1.11-SNAPSHOT'
+    id "com.possible-triangle.publishing" version "1.2.+"
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "com.modrinth.minotaur" version "2.+"
+}
+
+group = project.maven_group
+version = project.mod_version
+
+base {
+    archivesName = project.archives_name
+}
+
+loom {
+    silentMojangMappingsLicense()
+
+    forge {
+        mixinConfig 'glowworks.mixins.json'
+    }
+}
+
+repositories {
+    // Add repositories to retrieve artifacts from in here.
+    // You should only use this when depending on other mods because
+    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+    // for more information about repositories.
+
+    maven {
+        url = "https://www.cursemaven.com"
+        allowInsecureProtocol = true
+    }
+
+    maven { url = "https://api.modrinth.com/maven" }
+
+    // location of the maven that hosts JEI files since January 2023
+    maven { url = "https://maven.blamejared.com/" }
+
+    // location of a maven mirror for JEI files, as a fallback
+    maven { url = "https://modmaven.dev" }
+
+}
+
+dependencies {
+    minecraft "net.minecraft:minecraft:$project.minecraft_version"
+    mappings loom.officialMojangMappings()
+    forge "net.minecraftforge:forge:$project.forge_version"
+
+    implementation 'org.jetbrains:annotations:22.0.0'
+
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}"))
+    annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
+
+    //+ TOOLS
+    modRuntimeOnly("maven.modrinth:emi:${emi_version}+${minecraft_version}+forge")
+    modRuntimeOnly("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+    modRuntimeOnly("maven.modrinth:embeddium:${embeddium_version}+mc${minecraft_version}")
+
+//!! ───────────────────────────────────────────────────── Library ─────────────────────────────────────────────────────
+        //+ REQUIRED
+    modImplementation("maven.modrinth:moonlight:${moonlight_version}-forge") // v2.16.15
+    modImplementation("curse.maven:colorful-lighting-sodium-compat-1373023:7181391") // v1.8.2 | GeckoLib
+
+        //- UNREQUIRED - can be enabled or disabled
+    modRuntimeOnly("curse.maven:patchouli-306770:6164575") // v84.1 | Botania
+    modRuntimeOnly("curse.maven:curios-309927:6418456") // v5.14.1 | Botania
+
+//!! ─────────────────────────────────────────────────── Emission Mods ─────────────────────────────────────────────────
+    modRuntimeOnly("curse.maven:simply-light-300331:4832944")
+    modRuntimeOnly("curse.maven:dazzle-2-remastered-953723:4991173")
+    modRuntimeOnly("curse.maven:botania-225643:6870713") // Curios-API, Patchouli
+}
+
+processResources {
+    inputs.property 'version', project.version
+
+    filesMatching('META-INF/mods.toml') {
+        expand version: inputs.properties.version
+    }
+}
+
+java {
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this line, sources will not be generated.
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 17
+}
+
+// Configure Maven publishing.
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
+    }
+}
