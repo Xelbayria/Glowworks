@@ -1,4 +1,4 @@
-package net.mystic.glowworks.api.set;
+package net.mystic.glowworks.api.set.light;
 
 import net.mehvahdjukaar.moonlight.api.set.BlockTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;

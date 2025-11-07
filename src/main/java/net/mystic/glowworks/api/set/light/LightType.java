@@ -1,4 +1,4 @@
-package net.mystic.glowworks.api.set;
+package net.mystic.glowworks.api.set.light;
 
 import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
