@@ -1,15 +1,21 @@
 plugins {
     id 'dev.architectury.loom' version '1.11-SNAPSHOT'
     id "com.possible-triangle.publishing" version "1.2.+"
-    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "com.matthewprenger.cursegradle" version "1.+"
     id "com.modrinth.minotaur" version "2.+"
 }
 
-group = project.maven_group
+group = project.mod_group_id
 version = project.mod_version
 
-base {
-    archivesName = project.archives_name
+remapJar {
+    archiveAppendix = "1.20"
+    archiveClassifier = "forge"
+}
+
+remapSourcesJar {
+    archiveAppendix = "1.20"
+    archiveClassifier = "forge-sources"
 }
 
 loom {
@@ -18,6 +24,28 @@ loom {
     forge {
         mixinConfig 'glowworks.mixins.json'
     }
+}
+
+processResources {
+    inputs.property 'version', project.version
+
+    filesMatching('META-INF/mods.toml') {
+        expand version: inputs.properties.version
+    }
+}
+
+java {
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this line, sources will not be generated.
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 17
 }
 
 repositories {
@@ -59,11 +87,11 @@ dependencies {
     modRuntimeOnly("maven.modrinth:embeddium:${embeddium_version}+mc${minecraft_version}")
 
 //!! ───────────────────────────────────────────────────── Library ─────────────────────────────────────────────────────
-        //+ REQUIRED
+    //+ REQUIRED
     modImplementation("maven.modrinth:moonlight:${moonlight_version}-forge") // v2.16.15
-    modImplementation("curse.maven:colorful-lighting-sodium-compat-1373023:7181391") // v1.8.2 | GeckoLib
+    modImplementation("curse.maven:colorful-lighting-sodium-compat-1373023:7198244") // v1.8.3 | GeckoLib
 
-        //- UNREQUIRED - can be enabled or disabled
+    //- UNREQUIRED - can be enabled or disabled
     modRuntimeOnly("curse.maven:patchouli-306770:6164575") // v84.1 | Botania
     modRuntimeOnly("curse.maven:curios-309927:6418456") // v5.14.1 | Botania
 
@@ -73,28 +101,6 @@ dependencies {
     modRuntimeOnly("curse.maven:botania-225643:6870713") // Curios-API, Patchouli
 }
 
-processResources {
-    inputs.property 'version', project.version
-
-    filesMatching('META-INF/mods.toml') {
-        expand version: inputs.properties.version
-    }
-}
-
-java {
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
-    withSourcesJar()
-
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-
-tasks.withType(JavaCompile).configureEach {
-    it.options.release = 17
-}
-
 // Configure Maven publishing.
 publishing {
     publications {
@@ -102,12 +108,67 @@ publishing {
             from components.java
         }
     }
+}
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
+var env = System.getenv()
+var modLoader = name
+
+var changelogFile = rootProject.file("changelog.md")
+var changelogText = changelogFile.exists() ? changelogFile.text : ""
+
+if (env.MODRINTH_TOKEN) {
+    modrinth {
+        projectId = "${modrinth_id}"
+        uploadFile = tasks.remapJar
+        additionalFiles.add(tasks.remapSourcesJar)
+        gameVersions = [minecraft_version]
+        loaders = [modLoader]
+        changelog = changelogText
+        versionNumber = mod_version+'-'+modLoader
+
+//        if (modLoader == "fabric") {
+//            dependencies {
+//                required.project "fabric-api"
+//                required.project "moonlight"
+//            }
+//        } else {
+            dependencies {
+                required.project "moonlight"
+//                required.project "colorful_lighting"
+            }
+//        }
+    }
+}
+
+if (env.CURSEFORGE_TOKEN) {
+    curseforge {
+        apiKey = env.CURSEFORGE_TOKEN
+        project {
+            id = curseforge_id
+            changelog = changelogText
+            changelogType = 'markdown'
+            releaseType = 'release'
+            addGameVersion minecraft_version
+            addGameVersion modLoader.capitalize()
+
+//            mainArtifact(tasks.remapJar) {
+//                if (modLoader == "fabric") {
+//                    displayName = mod_id +"-"+ mod_version + "-fabric"
+//                }
+//            }
+
+//            if (modLoader == "fabric") {
+//                relations {
+//                    requiredDependency "fabric-api"
+//                    requiredDependency "selene"
+//                    requiredDependency "colorful-lighting-sodium-compat"
+//                }
+//            } else {
+                relations {
+                    requiredDependency("selene")
+                    requiredDependency("colorful-lighting-sodium-compat")
+                }
+//            }
+        }
     }
 }
