@@ -1,17 +1,18 @@
 modLoader = "javafml"
 loaderVersion = "[47,)"
-#issueTrackerURL = ""
-license = "Insert License Here"
+
+license = "${mod_license}"
+issueTrackerURL = "${mod_github}/issues"
 
 [[mods]]
 modId = "glowworks"
 version = "${version}"
 displayName = "Glowworks"
-authors = "Me!"
-description = '''
-This is an example description! Tell everyone what your mod is about!
-'''
-#logoFile = ""
+logoFile = "logo.png"
+authors = "${mod_authors}"
+credits = "${mod_credits}"
+description = '''${mod_description}'''
+modUrl = "${mod_homepage}"
 
 [[dependencies.glowworks]]
 modId = "forge"
