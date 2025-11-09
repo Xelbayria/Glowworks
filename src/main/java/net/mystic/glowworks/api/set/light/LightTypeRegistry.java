@@ -8,13 +8,11 @@ import net.mystic.glowworks.Glowworks;
 
 import java.util.*;
 
-import static net.mystic.glowworks.configs.BlacklistConfigs.BLACKLIST;
+import static net.mystic.glowworks.configs.BlacklistConfigs.LIGHT_BLACKLIST;
 
 public class LightTypeRegistry extends BlockTypeRegistry<LightType> {
 
     public static final LightTypeRegistry INSTANCE = new LightTypeRegistry();
-
-//    public static Map<String, >
 
     protected LightTypeRegistry() {
         super(LightType.class, "light_type");
@@ -35,7 +33,7 @@ public class LightTypeRegistry extends BlockTypeRegistry<LightType> {
         ResourceLocation standard_id = baseRes.withPath("block_type");
         String blockPath = baseRes.getPath();
 
-        boolean isBlockNotBlacklisted = BLACKLIST.get().stream().noneMatch(baseRes.toString()::matches);
+        boolean isBlockNotBlacklisted = LIGHT_BLACKLIST.get().stream().noneMatch(baseRes.toString()::matches);
 
         /// Detect blocks that has emission greater than 0
         if (block.getStateDefinition().getPossibleStates().get(0).getLightEmission() != 0) {
