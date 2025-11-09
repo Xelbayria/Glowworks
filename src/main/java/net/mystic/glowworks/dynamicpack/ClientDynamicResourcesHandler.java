@@ -12,6 +12,7 @@ import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
 import net.minecraft.resources.ResourceLocation;
 import net.mystic.glowworks.Glowworks;
 import net.mystic.glowworks.configs.EmitterConfigs;
+import net.mystic.glowworks.configs.FilterConfigs;
 import net.mystic.glowworks.configs.GlowworksConfigs;
 import org.apache.logging.log4j.Logger;
 
@@ -46,21 +47,21 @@ public class ClientDynamicResourcesHandler extends DynClientResourcesGenerator {
 
     @Override
     public void regenerateDynamicAssets(Consumer<ResourceGenTask> executor) {
-        if (!GlowworksConfigs.GENERATE_DYNAMIC_CLIENT.get()) return;
+        if (!GlowworksConfigs.GENERATE_DYNAMIC_CLIENT.get() || firstInit) return;
 
         this.dynamicPack.setGenerateDebugResources(PlatHelper.isDev() || GlowworksConfigs.DEBUG_RESOURCES.get());
 
         executor.accept((manager, sink) -> {
+                ResourceLocation emittersLoc = Glowworks.res("light/emitters");
+                ResourceLocation filterLoc = Glowworks.res("light/filters");
 
-            //            if (manager.getResource(EmitterConfigs.EMITTER_LOCATION)) {
-                Glowworks.LOGGER.info("Generating emitters.json...");
-                ResourceLocation resLoc = Glowworks.res("light/emitters");
-
-                sink.addJson(resLoc, EmitterConfigs.EMITTER_JSON, ResType.JSON);
-                Glowworks.LOGGER.info("Generation Completed");
-//            }
+                sink.addJson(emittersLoc, EmitterConfigs.EMITTER_JSON, ResType.JSON);
+                Glowworks.LOGGER.info("Generated emitters.json with " + EmitterConfigs.EMITTER_JSON.size() + " blocks");
+                sink.addJson(filterLoc, FilterConfigs.FILTER_JSON, ResType.JSON);
+                Glowworks.LOGGER.info("Generated filters.json with " + FilterConfigs.FILTER_JSON.size() + " blocks");
         });
 
+        firstInit = true;
 
     }
 }
