@@ -1,4 +1,4 @@
-package net.mystic.glowworks.configs;
+package net.xelbayria.glowworks.configs;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -7,8 +7,8 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
-import net.mystic.glowworks.Glowworks;
-import net.mystic.glowworks.api.set.light.LightType;
+import net.xelbayria.glowworks.Glowworks;
+import net.xelbayria.glowworks.api.set.light.LightType;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,18 +1,18 @@
-package net.mystic.glowworks ;
+package net.xelbayria.glowworks ;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
-import net.mystic.glowworks.api.set.glass.GlassType;
-import net.mystic.glowworks.api.set.glass.GlassTypeRegistry;
-import net.mystic.glowworks.api.set.light.LightType;
-import net.mystic.glowworks.api.set.light.LightTypeRegistry;
-import net.mystic.glowworks.configs.BlacklistConfigs;
-import net.mystic.glowworks.configs.EmitterConfigs;
-import net.mystic.glowworks.configs.FilterConfigs;
-import net.mystic.glowworks.configs.GlowworksConfigs;
-import net.mystic.glowworks.dynamicpack.ClientDynamicResourcesHandler;
+import net.xelbayria.glowworks.api.set.glass.GlassType;
+import net.xelbayria.glowworks.api.set.glass.GlassTypeRegistry;
+import net.xelbayria.glowworks.api.set.light.LightType;
+import net.xelbayria.glowworks.api.set.light.LightTypeRegistry;
+import net.xelbayria.glowworks.configs.BlacklistConfigs;
+import net.xelbayria.glowworks.configs.EmitterConfigs;
+import net.xelbayria.glowworks.configs.FilterConfigs;
+import net.xelbayria.glowworks.configs.GlowworksConfigs;
+import net.xelbayria.glowworks.dynamicpack.ClientDynamicResourcesHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

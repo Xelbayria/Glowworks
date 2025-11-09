@@ -1,19 +1,15 @@
-package net.mystic.glowworks.dynamicpack;
+package net.xelbayria.glowworks.dynamicpack;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynClientResourcesGenerator;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicTexturePack;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
 import net.minecraft.resources.ResourceLocation;
-import net.mystic.glowworks.Glowworks;
-import net.mystic.glowworks.configs.EmitterConfigs;
-import net.mystic.glowworks.configs.FilterConfigs;
-import net.mystic.glowworks.configs.GlowworksConfigs;
+import net.xelbayria.glowworks.Glowworks;
+import net.xelbayria.glowworks.configs.EmitterConfigs;
+import net.xelbayria.glowworks.configs.FilterConfigs;
+import net.xelbayria.glowworks.configs.GlowworksConfigs;
 import org.apache.logging.log4j.Logger;
 
 import java.util.function.Consumer;

@@ -1,14 +1,14 @@
-package net.mystic.glowworks.api.set.light;
+package net.xelbayria.glowworks.api.set.light;
 
 import net.mehvahdjukaar.moonlight.api.set.BlockTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.mystic.glowworks.Glowworks;
+import net.xelbayria.glowworks.Glowworks;
 
 import java.util.*;
 
-import static net.mystic.glowworks.configs.BlacklistConfigs.LIGHT_BLACKLIST;
+import static net.xelbayria.glowworks.configs.BlacklistConfigs.LIGHT_BLACKLIST;
 
 public class LightTypeRegistry extends BlockTypeRegistry<LightType> {
 

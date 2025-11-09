@@ -1,15 +1,15 @@
-package net.mystic.glowworks.api.set.glass;
+package net.xelbayria.glowworks.api.set.glass;
 
 import net.mehvahdjukaar.moonlight.api.set.BlockTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.mystic.glowworks.Glowworks;
+import net.xelbayria.glowworks.Glowworks;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import static net.mystic.glowworks.configs.BlacklistConfigs.GLASS_BLACKLIST;
+import static net.xelbayria.glowworks.configs.BlacklistConfigs.GLASS_BLACKLIST;
 
 public class GlassTypeRegistry extends BlockTypeRegistry<GlassType> {
 

@@ -1,4 +1,4 @@
-package net.mystic.glowworks.api.set.glass;
+package net.xelbayria.glowworks.api.set.glass;
 
 import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.mystic.glowworks.Glowworks;
+import net.xelbayria.glowworks.Glowworks;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
