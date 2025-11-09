@@ -8,7 +8,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mystic.glowworks.Glowworks;
-import net.mystic.glowworks.api.set.LightType;
+import net.mystic.glowworks.api.set.light.LightType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,16 +28,16 @@ public class EmitterConfigs {
     public static ConfigSpec SPEC;
     private static boolean wasInit = false;
 
-    private static final List<String> VANILLA_COLORS = List.of(
+    public static final List<String> VANILLA_COLORS = List.of(
             "white",
             "black",
+            "light_blue",
+            "light_gray",
             "blue",
             "brown",
             "cyan",
             "gray",
             "green",
-            "light_blue",
-            "light_gray",
             "lime",
             "magenta",
             "orange",
@@ -48,7 +48,7 @@ public class EmitterConfigs {
     );
 
     // Blocks' ID has no color from VANILLA_COLORS - This will determine what color the block will be emitting
-    private static final Map<String, String> BLOCK_ID_TO_COLOR = Map.ofEntries(
+    public static final Map<String, String> BLOCK_ID_TO_COLOR = Map.ofEntries(
             entry("beacon", "white"),
             entry("dragon_egg", "purple"),
             entry("lava", "orange"),
@@ -56,14 +56,14 @@ public class EmitterConfigs {
             entry("crying_obsidian", "purple")
     );
 
-    private static final Map<String, String> KEYWORD_TO_COLOR = Map.ofEntries(
+    public static final Map<String, String> KEYWORD_TO_COLOR = Map.ofEntries(
             entry("amethyst", "purple"),
             entry("sea", "light_blue"),
             entry("soul", "blue"),
             entry("torch", "yellow")
     );
 
-//    @SuppressWarnings("DataFlowIssue")
+    @SuppressWarnings("DataFlowIssue")
     public static void init() {
         if (wasInit) return;
         wasInit = true;
@@ -94,30 +94,26 @@ public class EmitterConfigs {
 
             modId.getChildren().forEach(entry -> {
                 String nameBlock = entry.getKey();
+                String blockId = idGenerator(namespace, nameBlock);
+
+                /// Creating RGB
                 String dyeName = getColorOrDefault(nameBlock);
+                int red = getColor4FromDyeName(dyeName).mul(17).red4;
+                int green = getColor4FromDyeName(dyeName).mul(17).green4;
+                int blue = getColor4FromDyeName(dyeName).mul(17).blue4;
 
-                try {
+                JsonArray rgb = new JsonArray(3);
+                rgb.add(red);
+                rgb.add(green);
+                rgb.add(blue);
 
-                    int red = getColor4FromDyeName(dyeName).red4 * 17;
-                    int green = getColor4FromDyeName(dyeName).green4 * 17;
-                    int blue = getColor4FromDyeName(dyeName).blue4 * 17;
+                /// Adding a config for each blockId in the config
+                Supplier<JsonElement> configSupplier = builder.defineJson(nameBlock, rgb);
 
-                    JsonArray rgb = new JsonArray(3);
-                    rgb.add(red);
-                    rgb.add(green);
-                    rgb.add(blue);
+                EMITTER_CONFIGS.computeIfAbsent(blockId, s -> JsonArray::new);
 
-                    String blockId = idGenerator(namespace, nameBlock);
+                EMITTER_CONFIGS.put(blockId, configSupplier);
 
-                    Supplier<JsonElement> configSupplier = builder.defineJson(nameBlock, rgb);
-
-                    EMITTER_CONFIGS.computeIfAbsent(blockId, s -> JsonArray::new);
-
-                    EMITTER_CONFIGS.put(blockId, configSupplier);
-
-                } catch (Exception e) {
-                    Glowworks.LOGGER.error("Failed to get color for {}: {}", nameBlock, e);
-                }
             });
 
             builder.pop();
@@ -129,6 +125,7 @@ public class EmitterConfigs {
 
         SPEC.loadFromFile();
 
+        /// Adding the blockId & its RGB to EMITTER_JSON & it will be imported into emitters.json
         EMITTER_CONFIGS.forEach((blockId, value) -> EMITTER_JSON.add(blockId, value.get()));
     }
 
@@ -137,7 +134,7 @@ public class EmitterConfigs {
     static Pattern compiledRegEx;
 
     /// Get the keyword of color or defaulted to "yellow"
-    private static String getColorOrDefault(String nameBlock) {
+    public static String getColorOrDefault(String nameBlock) {
         if (VANILLA_COLORS.stream().anyMatch(nameBlock::contains)) {
             Matcher m = compiledRegEx.matcher(nameBlock);
 
@@ -154,7 +151,7 @@ public class EmitterConfigs {
                 .map(Map.Entry::getValue).findFirst().orElse("white");
     }
 
-    private static void regexBuilder() {
+    public static void regexBuilder() {
         String RegEx = "";
 
         for (int idx = 0; idx < VANILLA_COLORS.size(); idx++) {
