@@ -4,10 +4,13 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
-import net.mystic.glowworks.api.set.LightType;
-import net.mystic.glowworks.api.set.LightTypeRegistry;
+import net.mystic.glowworks.api.set.glass.GlassType;
+import net.mystic.glowworks.api.set.glass.GlassTypeRegistry;
+import net.mystic.glowworks.api.set.light.LightType;
+import net.mystic.glowworks.api.set.light.LightTypeRegistry;
 import net.mystic.glowworks.configs.BlacklistConfigs;
 import net.mystic.glowworks.configs.EmitterConfigs;
+import net.mystic.glowworks.configs.FilterConfigs;
 import net.mystic.glowworks.configs.GlowworksConfigs;
 import net.mystic.glowworks.dynamicpack.ClientDynamicResourcesHandler;
 import org.apache.logging.log4j.LogManager;
@@ -24,9 +27,15 @@ public final class Glowworks {
         BlacklistConfigs.init();
 
         BlockSetAPI.registerBlockSetDefinition(LightTypeRegistry.INSTANCE);
-        BlockSetAPI.addDynamicBlockRegistration((r, t) ->
-                        EmitterConfigs.init(), LightType.class
-                );
+        BlockSetAPI.registerBlockSetDefinition(GlassTypeRegistry.INSTANCE);
+        BlockSetAPI.addDynamicBlockRegistration((r, t) -> {
+                    EmitterConfigs.init();
+                }, LightType.class
+        );
+        BlockSetAPI.addDynamicBlockRegistration((r, t) -> {
+                    FilterConfigs.init();
+                }, GlassType.class
+        );
 
         if (PlatHelper.getPhysicalSide().isClient()) ClientDynamicResourcesHandler.getInstance().register();
 
