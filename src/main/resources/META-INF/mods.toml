@@ -32,7 +32,7 @@ side = "BOTH"
 [[dependencies.glowworks]]
 modId="colorful_lighting"
 mandatory=true
-versionRange="[1.20.1-1.8.3,]"
+versionRange="[1.8.3,]"
 ordering="NONE"
 side="BOTH"
 
