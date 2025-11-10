@@ -1,6 +1,8 @@
 modLoader = "javafml"
 loaderVersion = "[47,)"
 
+license = "Supplementaries Team License v.1.1"
+
 [[mods]]
 modId = "glowworks"
 version = "${version}"
@@ -13,7 +15,6 @@ An addon for Colorful-Lighting and is a helper mod.
 '''
 modUrl = "https://www.curseforge.com/minecraft/mc-mods/glowworks"
 issueTrackerURL = "https://github.com/Xelbayria/Glowworks/issues"
-license = "Supplementaries Team License v.1.1"
 
 [[dependencies.glowworks]]
 modId = "forge"
