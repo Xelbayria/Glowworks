@@ -56,6 +56,8 @@ repositories {
 
     mavenLocal()
 
+    maven { url = "https://registry.somethingcatchy.net/repository/maven-releases/" } // Moonlight-Lib
+
     maven {
         url = "https://www.cursemaven.com"
         allowInsecureProtocol = true
@@ -87,9 +89,22 @@ dependencies {
     modRuntimeOnly("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
     modRuntimeOnly("maven.modrinth:embeddium:${embeddium_version}+mc${minecraft_version}")
 
+//!! ────────────────────────────────────────────────── Moonlight Lib ──────────────────────────────────────────────────
+    String path = System.getenv('REPOS20_1')
+
+    //- LOCAL
+    if (enable_moonlight_test.toBoolean()) {
+        modImplementation(files(path + "\\Moonlight\\forge\\build\\libs\\moonlight-$moonlight_testVersion-forge.jar"))
+    }
+    //+ MAVEN
+    else {
+        modImplementation("net.mehvahdjukaar:moonlight-forge:$moonlight_version"){
+            transitive = false
+        }
+    }
+
 //!! ───────────────────────────────────────────────────── Library ─────────────────────────────────────────────────────
     //+ REQUIRED
-    modImplementation("maven.modrinth:moonlight:${moonlight_version}-forge") // v2.16.15
     modImplementation("curse.maven:colorful-lighting-sodium-compat-1373023:7198244") // v1.8.3 | GeckoLib
 
     //- UNREQUIRED - can be enabled or disabled
