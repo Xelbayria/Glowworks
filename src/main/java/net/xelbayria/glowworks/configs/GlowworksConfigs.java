@@ -23,7 +23,7 @@ public class GlowworksConfigs {
                 .define("generate_dynamic_assets", true);
 
         DEBUG_RESOURCES = builder.comment("Creates a debug folder inside your instance directory where all the dynamically generated resources will be saved")
-                .define("save_debug_resources", false);
+                .define("save_debug_resources", true);
 
         builder.pop();
 
