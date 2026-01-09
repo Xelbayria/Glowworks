@@ -1,5 +1,6 @@
 plugins {
-    id 'dev.architectury.loom' version '1.11-SNAPSHOT'
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id 'dev.architectury.loom' version '1.11.+'
     id "com.possible-triangle.publishing" version "1.2.+"
     id "me.modmuss50.mod-publish-plugin" version "1.1.0"
 }
@@ -46,6 +47,9 @@ java {
 tasks.withType(JavaCompile).configureEach {
     it.options.release = 17
 }
+tasks.processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 
 repositories {
     // Add repositories to retrieve artifacts from in here.
@@ -80,14 +84,14 @@ dependencies {
 
     implementation 'org.jetbrains:annotations:22.0.0'
 
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
-    implementation(include("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}"))
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:$mixin_extras_version"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:$mixin_extras_version"))
     annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
 
     //+ TOOLS
-    modRuntimeOnly("maven.modrinth:emi:${emi_version}+${minecraft_version}+forge")
-    modRuntimeOnly("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
-    modRuntimeOnly("maven.modrinth:embeddium:${embeddium_version}+mc${minecraft_version}")
+    modRuntimeOnly("maven.modrinth:emi:$emi_version+$minecraft_version+forge")
+    modRuntimeOnly("mezz.jei:jei-$minecraft_version-forge:$jei_version")
+    modRuntimeOnly("maven.modrinth:embeddium:$embeddium_version+mc$minecraft_version")
 
 //!! ────────────────────────────────────────────────── Moonlight Lib ──────────────────────────────────────────────────
     String path = System.getenv('REPOS20_1')
@@ -98,9 +102,7 @@ dependencies {
     }
     //+ MAVEN
     else {
-        modImplementation("net.mehvahdjukaar:moonlight-forge:$moonlight_version"){
-            transitive = false
-        }
+        modApi("net.mehvahdjukaar:moonlight-forge:$moonlight_version:forge") { transitive = false }
     }
 
 //!! ───────────────────────────────────────────────────── Library ─────────────────────────────────────────────────────
@@ -138,17 +140,17 @@ publishMods {
     displayName = file.map { it.asFile.name }
 
     curseforge {
-        projectId = "${curseforge_id}"
+        projectId = "$curseforge_id"
         accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
-        minecraftVersions.add("${minecraft_version}")
+        minecraftVersions.add("$minecraft_version")
         requires("selene")
         requires("colorful-lighting-sodium-compat")
     }
 
     modrinth {
-        projectId = "${modrinth_id}"
+        projectId = "$modrinth_id"
         accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-        minecraftVersions.add("${minecraft_version}")
+        minecraftVersions.add("$minecraft_version")
         requires("moonlight")
         requires("colorful-lighting-sodium-compat")
     }
