@@ -92,7 +92,10 @@ public class EmitterConfigs {
 
             builder.push("blocks");
 
-            modId.getChildren().forEach(entry -> {
+            for (Map.Entry<String, Object> entry : modId.getChildren()) {
+
+                if (namespace.equals("minecraft")) continue;
+
                 String nameBlock = entry.getKey();
                 String blockId = idGenerator(namespace, nameBlock);
 
@@ -114,7 +117,7 @@ public class EmitterConfigs {
 
                 EMITTER_CONFIGS.put(blockId, configSupplier);
 
-            });
+            }
 
             builder.pop();
 
@@ -126,7 +129,14 @@ public class EmitterConfigs {
         SPEC.loadFromFile();
 
         /// Adding the blockId & its RGB to EMITTER_JSON & it will be imported into emitters.json
-        EMITTER_CONFIGS.forEach((blockId, value) -> EMITTER_JSON.add(blockId, value.get()));
+        for (Map.Entry<String, Supplier<JsonElement>> entry : EMITTER_CONFIGS.entrySet()) {
+            String blockId = entry.getKey();
+            Supplier<JsonElement> value = entry.getValue();
+
+            if (blockId.contains("minecraft")) continue;
+
+            EMITTER_JSON.add(blockId, value.get());
+        }
     }
 
 // ────────────────────────────────────────────────────── Methods ──────────────────────────────────────────────────────

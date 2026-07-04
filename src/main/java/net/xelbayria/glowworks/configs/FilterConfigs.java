@@ -55,7 +55,10 @@ public class FilterConfigs {
 
             builder.push("blocks");
 
-            modId.getChildren().forEach(entry -> {
+            for (Map.Entry<String, Object> entry : modId.getChildren()) {
+
+                if (namespace.equals("minecraft")) continue;
+
                 String nameBlock = entry.getKey();
                 String blockId = idGenerator(namespace, nameBlock);
 
@@ -77,7 +80,7 @@ public class FilterConfigs {
 
                 FILTER_CONFIGS.put(blockId, configSupplier);
 
-            });
+            }
 
             builder.pop();
 
