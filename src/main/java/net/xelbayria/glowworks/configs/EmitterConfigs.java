@@ -60,7 +60,9 @@ public class EmitterConfigs {
             entry("amethyst", "purple"),
             entry("sea", "light_blue"),
             entry("soul", "blue"),
-            entry("torch", "yellow")
+            entry("torch", "yellow"),
+            entry("glowstone", "yellow"),
+            entry("dark_matter_block", "black")
     );
 
     @SuppressWarnings("DataFlowIssue")
@@ -101,9 +103,15 @@ public class EmitterConfigs {
 
                 /// Creating RGB
                 String dyeName = getColorOrDefault(nameBlock);
-                int red = getColor4FromDyeName(dyeName).mul(17).red4;
-                int green = getColor4FromDyeName(dyeName).mul(17).green4;
-                int blue = getColor4FromDyeName(dyeName).mul(17).blue4;
+                int red = (nameBlock.matches("dark_red_\\w+"))
+                        ? getColor4FromDyeName(dyeName).mul(8.5F).red4
+                        : getColor4FromDyeName(dyeName).mul(17).red4;
+                int green = (nameBlock.matches("dark_green_\\w+"))
+                        ? getColor4FromDyeName(dyeName).mul(8.5F).green4
+                        : getColor4FromDyeName(dyeName).mul(17).green4;
+                int blue = (nameBlock.matches("dark_blue_\\w+"))
+                        ? getColor4FromDyeName(dyeName).mul(8.5F).blue4
+                        : getColor4FromDyeName(dyeName).mul(17).blue4;
 
                 JsonArray rgb = new JsonArray(3);
                 rgb.add(red);
@@ -141,24 +149,25 @@ public class EmitterConfigs {
 
 // ────────────────────────────────────────────────────── Methods ──────────────────────────────────────────────────────
 
-    static Pattern compiledRegEx;
+    /// Check if there is a color keywords as prefix in the id
+    static Pattern prefixRegEx;
+    /// Check if there is a color keywords as suffix in the id
+    static Pattern suffixRegEx;
 
-    /// Get the keyword of color or defaulted to "yellow"
+    /// Get the keyword of color or defaulted to "white"
     public static String getColorOrDefault(String nameBlock) {
-        if (VANILLA_COLORS.stream().anyMatch(nameBlock::contains)) {
-            Matcher m = compiledRegEx.matcher(nameBlock);
+        Matcher colorPrefix = prefixRegEx.matcher(nameBlock);
+        Matcher colorSuffix = suffixRegEx.matcher(nameBlock);
 
-            if (m.find()) return m.group("color");
-            else {
-                Glowworks.LOGGER.warn("Failed to get color & defaulted to \"white\" for {}", nameBlock);
-                return "white";
-            }
-        }
-        else if (BLOCK_ID_TO_COLOR.containsKey(nameBlock)) return BLOCK_ID_TO_COLOR.get(nameBlock);
+        if (colorPrefix.matches()) return colorPrefix.group("color");
+        else if (colorSuffix.matches()) return colorSuffix.group("color");
+
+        else if (BLOCK_ID_TO_COLOR.containsKey(nameBlock))
+            return BLOCK_ID_TO_COLOR.get(nameBlock);
 
         return KEYWORD_TO_COLOR.entrySet().stream()
-                .filter(entry -> nameBlock.contains(entry.getKey()))
-                .map(Map.Entry::getValue).findFirst().orElse("white");
+            .filter(entry -> nameBlock.contains(entry.getKey()))
+            .map(Map.Entry::getValue).findFirst().orElse("white");
     }
 
     public static void regexBuilder() {
@@ -170,7 +179,8 @@ public class EmitterConfigs {
             if (idx < VANILLA_COLORS.size() - 1) RegEx = RegEx.concat("|");
         }
 
-        compiledRegEx = Pattern.compile("(?:\\w+_)?(?<color>%s)(?:stone)?(?:_\\w+)?".formatted(RegEx));
+        prefixRegEx = Pattern.compile("(?:[a-z]+_)?(?<color>%s)(?:stone)?_(?:\\w+)?".formatted(RegEx));
+        suffixRegEx = Pattern.compile("(?:stone)?(?:\\w+_)(?<color>%s)".formatted(RegEx));
     }
 
     public static String idGenerator(String namespace, String nameBlock) {
